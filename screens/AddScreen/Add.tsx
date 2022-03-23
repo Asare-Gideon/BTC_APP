@@ -112,7 +112,7 @@ const Add = ({ navigation }: PostStackProps) => {
 	const handleSubmit = async () => {
 		setIsLoading(true);
 		try {
-			let post = await fetch('http://192.168.8.122:3000/api/post', {
+			let post = await fetch('https://bomso-town-church.herokuapp.com/api/post', {
 				method: 'POST',
 				body: JSON.stringify({ data: { ...form, imgUrl: imgBase64 } }),
 				headers: { 'Content-type': 'application/json' }

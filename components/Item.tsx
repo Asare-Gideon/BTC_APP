@@ -20,10 +20,13 @@ const Item = ({ name, image, text, roomNum, navigation, data, allData, setAllDat
 
 	const handleDelete = async () => {
 		try {
-			await fetch(`http://192.168.8.122:3000/api/deletepost/?postid=${data._id}&imgid=${data.imgPublicId}`, {
-				method: 'DELETE',
-				headers: { 'Content-type': 'application/json' }
-			});
+			await fetch(
+				`https://bomso-town-church.herokuapp.com/api/deletepost/?postid=${data._id}&imgid=${data.imgPublicId}`,
+				{
+					method: 'DELETE',
+					headers: { 'Content-type': 'application/json' }
+				}
+			);
 			let filterdData = allData.filter((item) => item._id != data._id);
 			setAllData(filterdData);
 		} catch (err) {

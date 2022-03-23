@@ -25,7 +25,7 @@ const Home = ({ navigation }: homeNavProp) => {
 
 	const loadData = async () => {
 		try {
-			const res = await fetch('http://192.168.8.122:3000/api/allpost');
+			const res = await fetch('https://bomso-town-church.herokuapp.com/api/allpost');
 			const postData = await res.json();
 			setAllData(postData);
 		} catch (err) {
