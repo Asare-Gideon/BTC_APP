@@ -7,7 +7,6 @@ import TextInput from '../../components/TextInput';
 import { PostStackProps } from '../../types';
 import { styles } from './styles';
 import Header from '../../components/Header';
-import images from '../../constants/Images';
 import * as ImagePicker from 'expo-image-picker';
 import { setBottomNav } from '../../features/utilitySlice/bottomSlice';
 import { useAppDispatch } from '../../app/reduxHooks/hooks';
@@ -20,7 +19,7 @@ interface data {
 	bacenter: string;
 }
 
-const Add = ({ navigation }: PostStackProps) => {
+const Edit = ({ navigation, route }: PostStackProps) => {
 	const [ isNetwork, setIsNetwork ] = useState(false);
 	const [ isError, setIsError ] = useState(false);
 	const [ isValidated, setIsValidated ] = useState(true);
@@ -36,57 +35,28 @@ const Add = ({ navigation }: PostStackProps) => {
 		roomNumber: '',
 		bacenter: ''
 	});
+
 	useEffect(() => {
 		navigation.addListener('focus', () => {
 			dispatch(setBottomNav(true));
+			setForm({
+				...form,
+				name: (route.params as any).name,
+				location: (route.params as any).location,
+				phoneNumber: (route.params as any).phoneNumber,
+				roomNumber: (route.params as any).roomNumber,
+				bacenter: (route.params as any).bacenter
+			});
 		});
 	}, []);
-	useEffect(() => {
-		(async () => {
-			if (Platform.OS !== 'web') {
-				const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-				if (status !== 'granted') {
-					alert('permison denied');
-				}
-			}
-		})();
-	}, []);
 
-	const pickImage = async () => {
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			base64: true,
-			allowsEditing: true,
-			aspect: [ 4, 3 ],
-			quality: 1
-		});
-
-		if (!result.cancelled) {
-			setImage(result.uri);
-			setImgBase64(result);
-			console.log(imgBase64);
-		}
-	};
-	const handleDelete = (): void => {
-		setImage('');
-	};
-	const clearInput = () => {
-		setForm({
-			name: '',
-			location: '',
-			phoneNumber: '',
-			roomNumber: '',
-			bacenter: ''
-		});
-	};
 	const handleValidation = () => {
 		if (
 			form.bacenter.length > 2 &&
 			form.location.length > 3 &&
 			form.name.length > 3 &&
 			form.phoneNumber.length > 9 &&
-			form.roomNumber.length > 0 &&
-			image != ''
+			form.roomNumber.length > 0
 		) {
 			setIsValidated(true);
 			handleSubmit();
@@ -106,7 +76,7 @@ const Add = ({ navigation }: PostStackProps) => {
 		setIsError(true);
 		setTimeout(() => {
 			setIsError(false);
-		}, 3000);
+		}, 5000);
 	};
 	const handleName = (e: string) => {
 		setForm({
@@ -119,17 +89,19 @@ const Add = ({ navigation }: PostStackProps) => {
 	const handleSubmit = async () => {
 		setIsLoading(true);
 		try {
-			let post = await fetch('https://bomso-town-church.herokuapp.com/api/post', {
-				method: 'POST',
-				body: JSON.stringify({ data: { ...form, imgUrl: imgBase64 } }),
-				headers: { 'Content-type': 'application/json' }
-			});
+			let post = await fetch(
+				`https://bomso-town-church.herokuapp.com/api/update/?postid=${(route.params as any)
+					._id}&imgid=${(route.params as any).imgPublicId}`,
+				{
+					method: 'PATCH',
+					body: JSON.stringify({ data: { ...form } }),
+					headers: { 'Content-type': 'application/json' }
+				}
+			);
 			let finalPost = await post.json();
 			if (finalPost) {
 				setIsLoading(false);
-				clearInput();
 				handIsSent();
-				setImage('');
 			}
 		} catch (err) {
 			console.log({ error: err });
@@ -139,7 +111,7 @@ const Add = ({ navigation }: PostStackProps) => {
 
 	return (
 		<View style={styles.main}>
-			<Header title="Add New" navigation={navigation} />
+			<Header title="Edit" navigation={navigation} />
 
 			<ScrollView style={styles.contentCont}>
 				<TextInput
@@ -178,24 +150,6 @@ const Add = ({ navigation }: PostStackProps) => {
 						isValidated ? '' : form.bacenter.length < 2 ? 'Bacenter must be at least 3 characters' : ''
 					}
 				/>
-				<Text style={styles.imageText}>Insert Images</Text>
-
-				<View style={styles.imageCont}>
-					{image === '' ? null : (
-						<View>
-							<TouchableOpacity style={styles.closeBtn} onPress={handleDelete}>
-								<EvilIcons name="close-o" size={22} color={Colors.primary} />
-							</TouchableOpacity>
-							<Image source={{ uri: image }} style={styles.image} />
-						</View>
-					)}
-					{image !== '' ? null : (
-						<TouchableOpacity style={styles.addBtn} onPress={pickImage}>
-							<Feather name="camera" size={30} />
-						</TouchableOpacity>
-					)}
-				</View>
-
 				<Button
 					onPress={handleValidation}
 					title={'Submit Product'}
@@ -220,9 +174,7 @@ const Add = ({ navigation }: PostStackProps) => {
 							borderRadius: 8
 						}}
 					>
-						<Text style={{ ...Fonts.body3, color: Colors.white }}>
-							You have successfully added new member
-						</Text>
+						<Text style={{ ...Fonts.body3, color: Colors.white, textAlign: 'center' }}>Edit is done!</Text>
 					</View>
 				) : null}
 
@@ -241,7 +193,7 @@ const Add = ({ navigation }: PostStackProps) => {
 						}}
 					>
 						<Text style={{ ...Fonts.body3, color: Colors.white }}>
-							Please make sure to fill all the inputs and add image too
+							Please make sure to fill all the inputs
 						</Text>
 					</View>
 				) : null}
@@ -256,4 +208,4 @@ const Add = ({ navigation }: PostStackProps) => {
 	);
 };
 
-export default Add;
+export default Edit;

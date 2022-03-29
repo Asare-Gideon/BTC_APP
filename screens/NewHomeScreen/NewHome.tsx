@@ -2,15 +2,15 @@ import { View, Text, FlatList, Alert, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { styles } from './Style';
 import SearchHeader from '../../components/SearchHeader';
-import { allDataType, homeNavProp } from '../../types';
-import Item from '../../components/Item';
+import { allDataType, SecondhomeNavProp } from '../../types';
 import { FAB } from 'react-native-elements';
 import Fuse from 'fuse.js';
 import { Colors, Sizes } from '../../constants/Layout';
 import { setBottomNav } from '../../features/utilitySlice/bottomSlice';
 import { useAppDispatch } from '../../app/reduxHooks/hooks';
+import NewItem from '../../components/NewItem';
 
-const Home = ({ navigation }: homeNavProp) => {
+const NewHome = ({ navigation }: SecondhomeNavProp) => {
 	const [ allData, setAllData ] = useState<allDataType[]>([]);
 	const [ search, setSearch ] = useState([]);
 	const [ isData, setIsData ] = useState(false);
@@ -33,12 +33,12 @@ const Home = ({ navigation }: homeNavProp) => {
 	}, []);
 	const loadData = async () => {
 		try {
-			const res = await fetch('https://bomso-town-church.herokuapp.com/api/allpost');
+			const res = await fetch('https://bomso-town-church.herokuapp.com/api/allencounter');
 			const postData = await res.json();
+			setAllData(postData);
 			if (postData) {
 				setIsData(true);
 			}
-			setAllData(postData);
 		} catch (err) {
 			console.log(err);
 		}
@@ -57,7 +57,7 @@ const Home = ({ navigation }: homeNavProp) => {
 	}
 
 	const renderItem = ({ item }: any) => (
-		<Item
+		<NewItem
 			name={item.name}
 			text={item.location}
 			navigation={navigation}
@@ -71,7 +71,7 @@ const Home = ({ navigation }: homeNavProp) => {
 	);
 
 	const searchItem = ({ item }: any) => (
-		<Item
+		<NewItem
 			name={item.item.name}
 			text={item.item.location}
 			navigation={navigation}
@@ -87,7 +87,7 @@ const Home = ({ navigation }: homeNavProp) => {
 	if (isData) {
 		return (
 			<View style={styles.main}>
-				<SearchHeader navigation={navigation} onChange={handleChange} />
+				<SearchHeader navigation={navigation as any} onChange={handleChange} />
 
 				{search.length > 0 ? (
 					<FlatList
@@ -125,7 +125,7 @@ const Home = ({ navigation }: homeNavProp) => {
 							alignSelf: 'center'
 						}}
 						buttonStyle={{ borderRadius: 30 }}
-						onPress={() => navigation.navigate('AddScreen')}
+						onPress={() => navigation.navigate('NewAddScreen')}
 					/>
 				</View>
 			</View>
@@ -147,4 +147,4 @@ const Home = ({ navigation }: homeNavProp) => {
 	}
 };
 
-export default Home;
+export default NewHome;

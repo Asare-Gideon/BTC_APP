@@ -4,7 +4,7 @@ import { View, Text, ScrollView, Image, TouchableOpacity, Platform } from 'react
 import { Button } from 'react-native-elements';
 import { Colors, Fonts, Sizes } from '../../constants/Layout';
 import TextInput from '../../components/TextInput';
-import { PostStackProps } from '../../types';
+import { SecondPostStackProps } from '../../types';
 import { styles } from './styles';
 import Header from '../../components/Header';
 import images from '../../constants/Images';
@@ -20,7 +20,7 @@ interface data {
 	bacenter: string;
 }
 
-const Add = ({ navigation }: PostStackProps) => {
+const NewAdd = ({ navigation }: SecondPostStackProps) => {
 	const [ isNetwork, setIsNetwork ] = useState(false);
 	const [ isError, setIsError ] = useState(false);
 	const [ isValidated, setIsValidated ] = useState(true);
@@ -119,7 +119,7 @@ const Add = ({ navigation }: PostStackProps) => {
 	const handleSubmit = async () => {
 		setIsLoading(true);
 		try {
-			let post = await fetch('https://bomso-town-church.herokuapp.com/api/post', {
+			let post = await fetch('https://bomso-town-church.herokuapp.com/api/encounter', {
 				method: 'POST',
 				body: JSON.stringify({ data: { ...form, imgUrl: imgBase64 } }),
 				headers: { 'Content-type': 'application/json' }
@@ -256,4 +256,4 @@ const Add = ({ navigation }: PostStackProps) => {
 	);
 };
 
-export default Add;
+export default NewAdd;

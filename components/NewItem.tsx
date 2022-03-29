@@ -2,9 +2,9 @@ import { AntDesign, Entypo } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Alert, Platform } from 'react-native';
 import { Colors, Fonts } from '../constants/Layout';
-import { cartsProp } from '../Types';
+import { NewcartsProp } from '../Types';
 
-const Item = ({ name, image, text, roomNum, navigation, data, allData, setAllData, date }: cartsProp) => {
+const NewItem = ({ name, image, text, roomNum, navigation, data, allData, setAllData, date }: NewcartsProp) => {
 	const [ titleUpdate, setTitleUpdate ] = useState<string>('');
 	const [ textUpdate, setDescriptionUpdate ] = useState('');
 	const [ isDeleted, setIsDeleted ] = useState(false);
@@ -27,7 +27,7 @@ const Item = ({ name, image, text, roomNum, navigation, data, allData, setAllDat
 	const handleDelete = async () => {
 		try {
 			await fetch(
-				`https://bomso-town-church.herokuapp.com/api/deletepost/?postid=${data._id}&imgid=${data.imgPublicId}`,
+				`https://bomso-town-church.herokuapp.com/api/deleteEncounter/?postid=${data._id}&imgid=${data.imgPublicId}`,
 				{
 					method: 'DELETE',
 					headers: { 'Content-type': 'application/json' }
@@ -60,7 +60,7 @@ const Item = ({ name, image, text, roomNum, navigation, data, allData, setAllDat
 	);
 
 	const handleNav = () => {
-		navigation.navigate('DetailScreen' as any, { data });
+		navigation.navigate('NewDetailScreen' as any, { data });
 		console.log(data);
 	};
 
@@ -199,4 +199,4 @@ const Item = ({ name, image, text, roomNum, navigation, data, allData, setAllDat
 	);
 };
 
-export default Item;
+export default NewItem;

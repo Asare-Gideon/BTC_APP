@@ -1,11 +1,10 @@
 import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { Fonts } from '../constants/Layout';
+import { Colors, Fonts } from '../constants/Layout';
 import { headerProp } from '../Types';
 
-const Header = ({ navigation, title }: headerProp) => {
+const Header = ({ navigation, title, screenName }: headerProp) => {
 	return (
 		<View style={styles.header}>
 			<TouchableOpacity style={styles.headerBtn} onPress={() => navigation.goBack()}>

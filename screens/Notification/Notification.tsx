@@ -7,10 +7,14 @@ const Notification = () => {
 		<View
 			style={{
 				paddingTop: Sizes.paddingTop,
-				flex: 1
+				flex: 1,
+				alignItems: 'center',
+				justifyContent: 'center',
+				width: Sizes.width,
+				height: Sizes.height
 			}}
 		>
-			<Text>Notification</Text>
+			<Text>No Notification yet</Text>
 		</View>
 	);
 };
